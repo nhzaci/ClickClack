@@ -17,7 +17,7 @@
                     <input type="text" class="text-input w-full" placeholder="Type here" v-if="isComplete" />
                 </div>
                 <div class="complete-box space-y-2" v-if="isComplete">
-                    <h1 class="align-middle" style="color:#071a52;">You have completed it! WPM:{{ fullWPM }} ACC: {{ fullACC }}</h1>
+                    <h1 class="align-middle" style="color:#17b978;">You have completed it! WPM:{{ fullWPM }} ACC: {{ fullACC }}</h1>
                     <button class="restart-button" @click="reloadPage">Restart</button>
                 </div>
             </div>
