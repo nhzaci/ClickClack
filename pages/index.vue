@@ -1,18 +1,17 @@
 <template>
   <div class="main-page space-y-10">
-    <div class="title">
-      Click<span class="text-yellow-400">Clack</span>
-    </div>
     <TypeTest />
   </div>
 </template>
 
 <script>
 import TypeTest from '../components/TypeTest';
+import Footer from '../components/Footer';
 
 export default {
   components: {
-    TypeTest
+    TypeTest,
+    Footer
   }
 }
 </script>
@@ -24,9 +23,6 @@ export default {
 }
 */
 .main-page {
-  @apply h-full flex flex-col justify-center items-center mx-auto bg-blue-800;
-}
-.title {
-  @apply text-4xl font-serif bg-blue-700 text-orange-300 p-5 shadow-xl;
+  @apply flex flex-col justify-center items-center mx-auto;
 }
 </style>

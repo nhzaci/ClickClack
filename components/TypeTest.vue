@@ -1,11 +1,12 @@
 <template>
     <div class="container">
         <div class="main-card space-y-5">
-            <div class="word-box" v-html="textBox"/>
+            <div class="word-box" v-html="currWordHTML"/>
             <div class="space-y-5">
                 <input type="text" class="text-input" :value="lastWord" @input="checkSpace($event.target.value)" placeholder="Type here">
                 <div class="complete-box" v-if="isComplete">
-                    <h1 class="align-middle">You have completed it!</h1>
+                    <h1 class="align-middle">You have completed it! WPM:{{ fullWPM }} ACC: {{ fullACC }}</h1>
+                    <button>Restart</button>
                 </div>
             </div>
         </div>
@@ -17,31 +18,57 @@ export default {
     data() {
         return {
             textBox: 'Random bunch of gibberish here to check accuracy compared to the other one',
+            htmlTextBox: [],
             fullTextInput: '',
             isComplete: false,
-            WPM: 0,
-            ACC: 0,
+            startTime: 0,
+            timeCompl: 0,
         }
     },
     methods: {
         checkSpace(word) {
-            if (this.textBox.split(' ').length === this.fullTextInput.split(' ').length) {
-                //Completed test
-                console.log('Test completed');
-                this.isComplete = true;
-            } else if (word.charAt(word.length - 1) == ' ') {
-                this.fullTextInput += word;
-                //console.log("space detected");
-                console.log(this.fullTextInput);
-            } else {
-                //console.log('not detecting spaces');
+            if (this.startTime == 0) {
+                this.startTime = Date.now();
             }
+            if (!this.isComplete) {
+                if (this.textBox.split(' ').length === this.fullTextInput.split(' ').length) {
+                    //Completed test
+                    this.fullTextInput += word;
+                    console.log('Test completed');
+                    this.timeCompl = Date.now();
+                    this.isComplete = true;
+                } else if (word.charAt(word.length - 1) == ' ') {
+                    this.fullTextInput += word;
+                    //console.log("space detected");
+                }
+            }
+            console.log(this.fullTextInput);
         }
     },
     computed: {
         lastWord() {
             let show = this.fullTextInput.split(" ");
             return show[show.length - 1];
+        },
+        currWordHTML() {
+            let textBoxSplit = this.textBox.split(" ");
+            let currIndex = this.fullTextInput.split(" ").length - 1;
+            let currWord = textBoxSplit[currIndex];
+            if (currWord !== undefined) {
+                let currWordHTML = '<span style="text-decoration:underline; color:#2a4365; font-weight:bold;">' + currWord + '</span>';
+                textBoxSplit[currIndex] = currWordHTML
+                this.
+            }
+            return textBoxSplit.join(" ");
+        },
+        fullWPM() {
+            let correctChar = 0;
+            let wrongChar = 0;
+            console.log("Start time is: " + Date.parse(this.startTime) + " and the endTime is " + this.timeCompl);
+            return (this.timeCompl - this.startTime)/1000
+        },
+        fullACC() {
+            return 0;
         }
     }
 }
