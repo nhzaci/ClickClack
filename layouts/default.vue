@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col justify-between h-screen bg-gray-700">
+  <div class="main-layout">
     <Header />
     <nuxt/>
     <Footer/>
@@ -19,4 +19,8 @@ export default {
 </script>
 
 <style>
+.main-layout {
+  @apply flex flex-col justify-between h-screen;
+  background-color: #071e3d;
+}
 </style>

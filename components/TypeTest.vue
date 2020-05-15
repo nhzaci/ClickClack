@@ -3,10 +3,14 @@
         <div class="main-card space-y-5">
             <div class="word-box" v-html="currWordHTML"/>
             <div class="space-y-5">
-                <input type="text" class="text-input" :value="lastWord" @input="checkSpace($event.target.value)" placeholder="Type here">
-                <div class="complete-box" v-if="isComplete">
-                    <h1 class="align-middle">You have completed it! WPM:{{ fullWPM }} ACC: {{ fullACC }}</h1>
-                    <button>Restart</button>
+                <div class="inline-flex justify-between w-full space-x-10">
+                    <input type="text" class="text-input w-3/4" :value="lastWord" @input="checkSpace($event.target.value)" placeholder="Type here" v-if="!isComplete">
+                    <button class="restart-button" v-if="!isComplete" @click="reloadPage">Restart</button>
+                    <input type="text" class="text-input w-full" placeholder="Type here" v-if="isComplete" />
+                </div>
+                <div class="complete-box space-y-2" v-if="isComplete">
+                    <h1 class="align-middle" style="color:#071a52;">You have completed it! WPM:{{ fullWPM }} ACC: {{ fullACC }}</h1>
+                    <button class="restart-button" @click="reloadPage">Restart</button>
                 </div>
             </div>
         </div>
@@ -17,7 +21,7 @@
 export default {
     data() {
         return {
-            textBox: 'Random bunch of gibberish here to check accuracy compared to the other one',
+            textBox: 'Random bunch of gibberish here to check accuracy compared to the other one how another Indian something has got goat nothing everything another one singer songwriter can the justify center between around nothingness space open longitude latitude',
             htmlTextBox: [],
             fullTextInput: '',
             isComplete: false,
@@ -31,18 +35,22 @@ export default {
                 this.startTime = Date.now();
             }
             if (!this.isComplete) {
-                if (this.textBox.split(' ').length === this.fullTextInput.split(' ').length) {
+                if (this.textBox.split(' ').length === this.fullTextInput.split(' ').length && word.charAt(word.length - 1) == ' ') {
                     //Completed test
                     this.fullTextInput += word;
                     console.log('Test completed');
                     this.timeCompl = Date.now();
                     this.isComplete = true;
+                    console.log(this.textBox);
                 } else if (word.charAt(word.length - 1) == ' ') {
                     this.fullTextInput += word;
                     //console.log("space detected");
                 }
             }
             console.log(this.fullTextInput);
+        },
+        reloadPage() {
+            window.location.reload();
         }
     },
     computed: {
@@ -52,20 +60,41 @@ export default {
         },
         currWordHTML() {
             let textBoxSplit = this.textBox.split(" ");
-            let currIndex = this.fullTextInput.split(" ").length - 1;
+            let textInputSplit = this.fullTextInput.split(" ")
+            let currIndex = textInputSplit.length - 1;
             let currWord = textBoxSplit[currIndex];
             if (currWord !== undefined) {
-                let currWordHTML = '<span style="text-decoration:underline; color:#2a4365; font-weight:bold;">' + currWord + '</span>';
+                let currWordHTML = '<span style="text-decoration:underline; font-weight:bold;">' + currWord + '</span>';
                 textBoxSplit[currIndex] = currWordHTML
-                this.
+            }
+            if (currIndex >= 1) {
+                let isCorrect = textBoxSplit[currIndex - 1] === textInputSplit[currIndex - 1];
+                let prevWord = textBoxSplit[currIndex - 1]
+                if (isCorrect) {
+                    this.htmlTextBox[currIndex - 1] = '<span style="color:greenyellow;">' + prevWord + '</span>';
+                } else {
+                    this.htmlTextBox[currIndex - 1] = '<span style="color:red;">' + prevWord + '</span>';
+                }
+                return this.htmlTextBox.join(" ") + ' ' + textBoxSplit.slice(currIndex, textBoxSplit.length + 1).join(" ");
             }
             return textBoxSplit.join(" ");
         },
         fullWPM() {
             let correctChar = 0;
             let wrongChar = 0;
-            console.log("Start time is: " + Date.parse(this.startTime) + " and the endTime is " + this.timeCompl);
-            return (this.timeCompl - this.startTime)/1000
+            let textInputSplit = this.fullTextInput.split(" ");
+            let textBoxSplit = this.textBox.split(" ");
+            for (let i = 0; i < textInputSplit.length; i++) {
+                if (textInputSplit[i] === textBoxSplit[i]) {
+                    correctChar += textInputSplit.length;
+                } else {
+                    wrongChar += textInputSplit.length;
+                }
+            }
+            console.log(correctChar);
+            console.log(wrongChar);
+            console.log(this.timeCompl - this.startTime);
+            return Math.round((correctChar / 5) / (this.timeCompl - this.startTime) * 1000 * 60);
         },
         fullACC() {
             return 0;
@@ -76,22 +105,38 @@ export default {
 
 <style scoped>
 .container {
-    @apply flex flex-col mx-auto p-5 bg-yellow-200 shadow-xl;
+    @apply flex flex-col mx-auto p-5;
 }
 
 .main-card {
-    @apply block flex flex-col p-5 bg-blue-800 font-serif shadow-lg;
+    @apply block flex flex-col p-5 font-thin shadow-xl mx-auto;
+    background-color: #1f4287;
 }
 
 .word-box {
-    @apply w-full bg-orange-300 text-blue-800 p-5 text-2xl shadow-lg;
+    @apply w-full p-5 text-2xl text-blue-800 shadow-lg;
+    background-color: #086972;
+    color: #a7ff83;
 }
 
 .text-input {
-    @apply w-full h-16 text-2xl bg-blue-600 p-5 text-gray-900 shadow-lg;
+    @apply h-16 text-2xl p-5 shadow-lg;
+    color: #071a52;
+    background-color: #17b978;
+}
+
+.restart-button {
+    @apply w-1/4 h-16 text-2xl shadow-lg font-thin bg-blue-500;
+    color: #a7ff83;
 }
 
 .complete-box {
-    @apply w-full p-2 text-3xl bg-yellow-200 text-blue-800 shadow-lg items-center text-center;
+    @apply w-full p-5 text-3xl shadow-lg items-center text-center bg-orange-200;
+    color: #17b978;
+}
+
+::placeholder {
+    color: white;
+    opacity: 0.8;
 }
 </style>
