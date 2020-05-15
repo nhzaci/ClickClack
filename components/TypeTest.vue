@@ -164,7 +164,6 @@ export default {
 
 .complete-box {
     @apply w-full p-5 text-3xl shadow-lg items-center text-center bg-orange-200;
-    color: #17b978;
 }
 
 ::placeholder {
