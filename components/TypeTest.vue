@@ -1,6 +1,14 @@
 <template>
     <div class="container">
         <div class="main-card space-y-5">
+            <div class="word-sel">
+                Word Selector: 
+                <button @click="set_wordCount(10)">10</button>
+                <button @click="set_wordCount(25)">25</button>
+                <button @click="set_wordCount(50)">50</button>
+                <button @click="set_wordCount(100)">100</button>
+                <button @click="set_wordCount(250)">250</button>
+            </div>
             <div class="word-box" v-html="currWordHTML"/>
             <div class="space-y-5">
                 <div class="inline-flex justify-between w-full space-x-10">
@@ -19,11 +27,13 @@
 
 <script>
 import axios from 'axios';
+import wordList from '../assets/words.json';
 
 export default {
     data() {
         return {
-            textBox: 'Random bunch of gibberish here to check accuracy compared to the other one how another Indian something has got goat nothing everything another one singer songwriter can the justify center between around nothingness space open longitude latitude',
+            wordsJson: wordList,
+            wordCount: 100,
             htmlTextBox: [],
             fullTextInput: '',
             isComplete: false,
@@ -40,19 +50,24 @@ export default {
                 if (this.textBox.split(' ').length === this.fullTextInput.split(' ').length && word.charAt(word.length - 1) == ' ') {
                     //Completed test
                     this.fullTextInput += word;
-                    console.log('Test completed');
+                    //console.log('Test completed');
                     this.timeCompl = Date.now();
                     this.isComplete = true;
-                    console.log(this.textBox);
+                    //console.log(this.textBox);
                 } else if (word.charAt(word.length - 1) == ' ') {
                     this.fullTextInput += word;
                     //console.log("space detected");
                 }
             }
-            console.log(this.fullTextInput);
+            //console.log(this.fullTextInput);
         },
-        reloadPage() {
+        reloadPage(count = 100) {
             window.location.reload();
+            this.wordCount = count;
+        },
+        set_wordCount(count) {
+            this.wordCount = count;
+            this.$forceUpdate();
         }
     },
     computed: {
@@ -93,21 +108,24 @@ export default {
                     wrongChar += textInputSplit.length;
                 }
             }
-            console.log(correctChar);
-            console.log(wrongChar);
-            console.log(this.timeCompl - this.startTime);
+            //console.log(correctChar);
+            //console.log(wrongChar);
+            //console.log(this.timeCompl - this.startTime);
             return Math.round((correctChar / 5) / (this.timeCompl - this.startTime) * 1000 * 60);
         },
         fullACC() {
             return 0;
+        },
+        textBox() {
+            let wordString = ''
+            for(let i = 0; i < this.wordCount; i++) {
+                wordString += this.wordsJson[Math.floor(Math.random() * 1000)]
+                if (i !== this.wordCount - 1) {
+                    wordString += ' '
+                }
+            }
+            return wordString;
         }
-    },
-    async fetch() {
-        let resp = await axios
-            .get('https://random-word-api.herokuapp.com/word?number=100&swear=0')
-            .then(response => response.data)
-            .catch(error => console.error(error));
-        this.textBox = resp.join(" ");
     }
 }
 </script>
@@ -132,6 +150,11 @@ export default {
     @apply h-16 text-2xl p-5 shadow-lg;
     color: #071a52;
     background-color: #17b978;
+}
+
+.word-sel {
+    @apply text-xl bg-blue-500 p-2;
+    color: #a7ff83;
 }
 
 .restart-button {
