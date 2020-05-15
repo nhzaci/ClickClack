@@ -8,4 +8,4 @@ A simple and minimalistic typing speed test based on Nuxt.js with a material des
 ### TODOS
 1. Calculating WPM (I am doing 5 char per word but it feels off...) and Accuracy
 2. Changing of themes and adding prebuilt themes
-3. Choose from various counts and make the text dynamic
+3. Allow choosing of a number of words to be used
