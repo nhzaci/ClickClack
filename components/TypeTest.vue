@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
@@ -99,6 +101,13 @@ export default {
         fullACC() {
             return 0;
         }
+    },
+    async fetch() {
+        let resp = await axios
+            .get('https://random-word-api.herokuapp.com/word?number=100&swear=0')
+            .then(response => response.data)
+            .catch(error => console.error(error));
+        this.textBox = resp.join(" ");
     }
 }
 </script>
