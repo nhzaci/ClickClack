@@ -17,7 +17,15 @@
             <div class="word-box lg:text-2xl" v-html="currWordHTML"/>
             <div class="space-y-5">
                 <div class="inline-flex justify-between w-full space-x-10">
-                    <input type="text" class="text-input w-3/4" :value="lastWord" @input="checkSpace($event.target.value)" placeholder="Type here" v-if="!isComplete">
+                    <input 
+                        type="text" 
+                        class="text-input w-3/4" 
+                        :value="lastWord" 
+                        @keydown.esc="reloadPage()"
+                        @input="checkSpace($event.target.value)" 
+                        placeholder="Type here" 
+                        v-if="!isComplete"
+                    >
                     <button class="restart-button" v-if="!isComplete" @click="reloadPage()">Restart</button>
                     <input type="text" class="text-input w-full" placeholder="Type here" v-if="isComplete" />
                 </div>
