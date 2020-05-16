@@ -21,7 +21,7 @@
                         type="text" 
                         class="text-input w-3/4" 
                         :value="lastWord" 
-                        @keydown.esc="reloadPage()"
+                        @keyup.esc="reloadPage()"
                         @input="checkSpace($event.target.value)" 
                         placeholder="Type here" 
                         v-if="!isComplete"
