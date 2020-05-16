@@ -2,12 +2,17 @@
     <div class="container">
         <div class="main-card space-y-5">
             <div class="word-sel">
-                Word Selector: 
-                <button @click="set_wordCount(10)">10</button>
-                <button @click="set_wordCount(25)">25</button>
-                <button @click="set_wordCount(50)">50</button>
-                <button @click="set_wordCount(100)">100</button>
-                <button @click="set_wordCount(250)">250</button>
+                <div class="">
+                    Word Selector: 
+                    <button @click="set_wordCount(10)">10</button>
+                    <button @click="set_wordCount(25)">25</button>
+                    <button @click="set_wordCount(50)">50</button>
+                    <button @click="set_wordCount(100)">100</button>
+                    <button @click="set_wordCount(250)">250</button>
+                </div>
+                <div>
+                    <h1 class="font-semibold">{{ fullWPM }}</h1>
+                </div>
             </div>
             <div class="word-box" v-html="currWordHTML"/>
             <div class="space-y-5">
@@ -17,7 +22,7 @@
                     <input type="text" class="text-input w-full" placeholder="Type here" v-if="isComplete" />
                 </div>
                 <div class="complete-box space-y-2" v-if="isComplete">
-                    <h1 class="align-middle" style="color:#071e3d;">You have completed it! WPM:{{ fullWPM }} ACC: {{ fullACC }}</h1>
+                    <h1 class="align-middle" style="color:#071e3d;">Another one?</h1>
                     <button class="restart-button" @click="reloadPage">Restart</button>
                 </div>
             </div>
@@ -61,9 +66,8 @@ export default {
             }
             //console.log(this.fullTextInput);
         },
-        reloadPage(count = 100) {
+        reloadPage(count) {
             window.location.reload();
-            this.wordCount = count;
         },
         set_wordCount(count) {
             this.wordCount = count;
@@ -97,24 +101,33 @@ export default {
             return textBoxSplit.join(" ");
         },
         fullWPM() {
+            if (!this.isComplete) {
+                return "WPM: TBC ACC: TBC"
+            }
+
             let correctChar = 0;
             let wrongChar = 0;
             let textInputSplit = this.fullTextInput.split(" ");
             let textBoxSplit = this.textBox.split(" ");
             for (let i = 0; i < textInputSplit.length; i++) {
                 if (textInputSplit[i] === textBoxSplit[i]) {
-                    correctChar += textInputSplit.length;
+                    correctChar += textInputSplit[i].length + 1;
+                    if (i !== textInputSplit.length - 1) {
+                        correctChar += 1
+                    }
                 } else {
-                    wrongChar += textInputSplit.length;
+                    wrongChar += textInputSplit[i].length;
+                    if (i !== textInputSplit.length - 1) {
+                        wrongChar += 1
+                    }
                 }
             }
             //console.log(correctChar);
             //console.log(wrongChar);
-            //console.log(this.timeCompl - this.startTime);
-            return Math.round((correctChar / 5) / (this.timeCompl - this.startTime) * 1000 * 60);
-        },
-        fullACC() {
-            return 0;
+            console.log(this.timeCompl - this.startTime);
+            let wpm = Math.round((correctChar / 5) / ((this.timeCompl - this.startTime) / 1000 / 60));
+            let acc = Math.round(correctChar / (correctChar + wrongChar) * 100);
+            return `WPM: ${wpm} ACC: ${acc}%`;
         },
         textBox() {
             let wordString = ''
@@ -153,7 +166,7 @@ export default {
 }
 
 .word-sel {
-    @apply text-xl bg-blue-500 p-2;
+    @apply text-xl bg-blue-500 p-2 flex justify-between;
     color: #a7ff83;
 }
 
