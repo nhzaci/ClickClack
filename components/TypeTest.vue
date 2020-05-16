@@ -31,7 +31,7 @@
                 </div>
                 <div class="complete-box space-y-2" v-if="isComplete">
                     <h1 class="align-middle" style="color:#071e3d;">Another one?</h1>
-                    <button class="restart-button" @click="reloadPage">Restart</button>
+                    <button class="restart-button" @keyup.esc="reloadPage()" @click="reloadPage">Restart</button>
                 </div>
             </div>
         </div>
