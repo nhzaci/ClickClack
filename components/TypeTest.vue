@@ -2,23 +2,23 @@
     <div class="container">
         <div class="main-card space-y-5">
             <div class="word-sel">
-                <div class="">
+                <div>
                     Word Selector: 
-                    <button @click="set_wordCount(10)">10</button>
-                    <button @click="set_wordCount(25)">25</button>
-                    <button @click="set_wordCount(50)">50</button>
-                    <button @click="set_wordCount(100)">100</button>
-                    <button @click="set_wordCount(250)">250</button>
+                    <button class="wordcount-button" @click="set_wordCount(10)">10</button>
+                    <button class="wordcount-button" @click="set_wordCount(25)">25</button>
+                    <button class="wordcount-button" @click="set_wordCount(50)">50</button>
+                    <button class="wordcount-button" @click="set_wordCount(100)">100</button>
+                    <button class="wordcount-button" @click="set_wordCount(250)">250</button>
                 </div>
                 <div>
-                    <h1 class="font-semibold">{{ fullWPM }}</h1>
+                    <h1>{{ fullWPM }}</h1>
                 </div>
             </div>
-            <div class="word-box" v-html="currWordHTML"/>
+            <div class="word-box lg:text-2xl" v-html="currWordHTML"/>
             <div class="space-y-5">
                 <div class="inline-flex justify-between w-full space-x-10">
                     <input type="text" class="text-input w-3/4" :value="lastWord" @input="checkSpace($event.target.value)" placeholder="Type here" v-if="!isComplete">
-                    <button class="restart-button" v-if="!isComplete" @click="reloadPage">Restart</button>
+                    <button class="restart-button" v-if="!isComplete" @click="reloadPage()">Restart</button>
                     <input type="text" class="text-input w-full" placeholder="Type here" v-if="isComplete" />
                 </div>
                 <div class="complete-box space-y-2" v-if="isComplete">
@@ -38,12 +38,13 @@ export default {
     data() {
         return {
             wordsJson: wordList,
-            wordCount: 100,
+            wordsSel: 100,
             htmlTextBox: [],
             fullTextInput: '',
             isComplete: false,
             startTime: 0,
             timeCompl: 0,
+            isCompleteOnce: false
         }
     },
     methods: {
@@ -58,6 +59,7 @@ export default {
                     //console.log('Test completed');
                     this.timeCompl = Date.now();
                     this.isComplete = true;
+                    this.isCompleteOnce = true;
                     //console.log(this.textBox);
                 } else if (word.charAt(word.length - 1) == ' ') {
                     this.fullTextInput += word;
@@ -66,11 +68,12 @@ export default {
             }
             //console.log(this.fullTextInput);
         },
-        reloadPage(count) {
-            window.location.reload();
+        reloadPage() {
+            window.location.reload(); //Refreshes page
         },
         set_wordCount(count) {
             this.wordCount = count;
+            this.$cookies.set('word-count', count);
             this.$forceUpdate();
         }
     },
@@ -101,8 +104,8 @@ export default {
             return textBoxSplit.join(" ");
         },
         fullWPM() {
-            if (!this.isComplete) {
-                return "WPM: TBC ACC: TBC"
+            if (!this.isCompleteOnce) {
+                return "WPM: TBC ACC: TBC";
             }
 
             let correctChar = 0;
@@ -113,12 +116,12 @@ export default {
                 if (textInputSplit[i] === textBoxSplit[i]) {
                     correctChar += textInputSplit[i].length + 1;
                     if (i !== textInputSplit.length - 1) {
-                        correctChar += 1
+                        correctChar += 1;
                     }
                 } else {
                     wrongChar += textInputSplit[i].length;
                     if (i !== textInputSplit.length - 1) {
-                        wrongChar += 1
+                        wrongChar += 1;
                     }
                 }
             }
@@ -132,12 +135,24 @@ export default {
         textBox() {
             let wordString = ''
             for(let i = 0; i < this.wordCount; i++) {
-                wordString += this.wordsJson[Math.floor(Math.random() * 1000)]
+                wordString += this.wordsJson[Math.floor(Math.random() * 1000)];
                 if (i !== this.wordCount - 1) {
-                    wordString += ' '
+                    wordString += ' ';
                 }
             }
             return wordString;
+        },
+        wordCount: {
+            get: function () {
+                if (this.$cookies.get('word-count') !== undefined) {
+                    this.wordsSel = this.$cookies.get('word-count');
+                }
+                return this.wordsSel;
+            },
+            set: function (count) {
+                this.wordsSel = count;
+                return this.wordsSel;
+            }
         }
     }
 }
@@ -154,7 +169,7 @@ export default {
 }
 
 .word-box {
-    @apply w-full p-5 text-2xl text-blue-800 shadow-lg;
+    @apply w-full p-5 text-lg text-blue-800 shadow-lg;
     background-color: #086972;
     color: #a7ff83;
 }
@@ -166,13 +181,25 @@ export default {
 }
 
 .word-sel {
-    @apply text-xl bg-blue-500 p-2 flex justify-between;
+    @apply text-xl bg-blue-500 flex justify-between px-2 items-center;
     color: #a7ff83;
+}
+
+.wordcount-button {
+    @apply pt-1 border-b border-transparent font-thin;
+}
+
+.wordcount-button:hover {
+    @apply border-b border-yellow-200;
 }
 
 .restart-button {
     @apply w-1/4 h-16 text-2xl shadow-lg font-thin bg-blue-500;
     color: #a7ff83;
+}
+
+.restart-button:hover {
+    @apply bg-blue-600 shadow-inner shadow-none;
 }
 
 .complete-box {

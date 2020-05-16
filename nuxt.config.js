@@ -41,6 +41,7 @@ export default {
   */
   modules: [
     '@nuxtjs/axios',
+    'cookie-universal-nuxt'
   ],
   /*
   ** Build configuration

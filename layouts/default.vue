@@ -20,7 +20,7 @@ export default {
 
 <style>
 .main-layout {
-  @apply flex flex-col justify-between h-screen;
+  @apply flex flex-col flex-wrap justify-between min-h-screen;
   background-color: #071e3d;
 }
 </style>
