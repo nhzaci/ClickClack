@@ -12,9 +12,10 @@
             <template v-slot:body>
                 <div class="p-5">
                     <ol class="list-disc space-y-2">
-                        <li>When you start typing in the input box, the time starts</li>
-                        <li>Press space to move onto the next word</li>
-                        <li>WPM and ACC is averaged over your runs</li>
+                        <li>The internal timer starts once you start typing in the input box</li>
+                        <li>Space skips onto the next word</li>
+                        <li>Pressing 'Esc' inside the input box allows you to restart</li>
+                        <li>WPM and ACC is averaged over your runs on the top right and can be cleared by clearing your cookies</li>
                     </ol>
                 </div>
             </template>
