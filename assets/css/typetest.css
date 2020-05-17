@@ -57,7 +57,7 @@
 }
 
 .wpm-counter {
-    @apply text-base
+    @apply text-base pt-1 border-b border-transparent font-thin;
 }
 
 @screen lg {
