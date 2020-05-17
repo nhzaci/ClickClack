@@ -1,0 +1,82 @@
+.container {
+    @apply flex flex-col mx-auto p-5;
+}
+
+.main-card {
+    @apply block flex flex-col p-5 font-thin shadow-xl mx-auto;
+    background-color: #1f4287;
+}
+
+.word-box {
+    @apply w-full p-5 text-lg text-blue-800 shadow-lg;
+    background-color: #086972;
+    color: #a7ff83;
+}
+
+.text-input {
+    @apply h-16 text-xl p-5 shadow-lg;
+    color: #071a52;
+    background-color: #17b978;
+}
+
+.word-sel {
+    @apply text-base bg-blue-500 flex justify-between px-2 items-center;
+    color: #a7ff83;
+}
+
+.wordcount-button {
+    @apply pt-1 border-b border-transparent font-thin;
+}
+
+.wordcount-button:hover {
+    @apply border-b border-yellow-200;
+}
+
+.restart-button {
+    @apply w-1/4 h-16 text-lg shadow-lg font-thin bg-blue-500;
+    color: #a7ff83;
+}
+
+.restart-button:hover {
+    @apply bg-blue-600 shadow-inner shadow-none;
+}
+
+.complete-box {
+    @apply w-full p-5 text-lg font-normal shadow-lg items-center text-center;
+    background-color: #071e3d;
+}
+
+.complete-box-text {
+    color: #17b978;
+}
+
+::placeholder {
+    @apply font-thin;
+    color: white;
+    opacity: 0.8;
+}
+
+.wpm-counter {
+    @apply text-base
+}
+
+@screen lg {
+    .wpm-counter {
+        @apply text-xl;
+    }
+    .word-sel {
+        @apply text-xl;
+    }
+    .word-box {
+        @apply text-2xl;
+    }
+    .text-input {
+        @apply text-2xl;
+    }
+    .restart-button {
+        @apply text-xl;
+    }
+    .complete-box {
+        @apply text-2xl;
+    }
+}

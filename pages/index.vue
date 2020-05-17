@@ -5,10 +5,13 @@
 </template>
 
 <script>
-import TypeTest from '../components/TypeTest';
-import Footer from '../components/Footer';
+import Footer from '@/components/Footer';
+import TypeTest from '@/components/TypeTest';
 
 export default {
+  head: {
+      titleTemplate: "%s - Home", 
+  },
   components: {
     TypeTest,
     Footer

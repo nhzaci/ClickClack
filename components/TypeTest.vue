@@ -11,7 +11,7 @@
                     <button class="wordcount-button" @click="set_wordCount(250)">250</button>
                 </div>
                 <div>
-                    <h1>{{ fullWPM }}</h1>
+                    <h1 class="wpm-counter">{{ fullWPM[1] }}</h1>
                 </div>
             </div>
             <div class="word-box lg:text-2xl" v-html="currWordHTML"/>
@@ -27,11 +27,11 @@
                         v-if="!isComplete"
                     >
                     <button class="restart-button" v-if="!isComplete" @click="reloadPage()">Restart</button>
-                    <input type="text" class="text-input w-full" placeholder="Type here" v-if="isComplete" />
+                    <input type="text" class="text-input w-full" placeholder="Type here" @keyup.esc="reloadPage()" v-if="isComplete" />
                 </div>
-                <div class="complete-box space-y-2" v-if="isComplete">
-                    <h1 class="align-middle" style="color:#071e3d;">Another one?</h1>
-                    <button class="restart-button" @keyup.esc="reloadPage()" @click="reloadPage">Restart</button>
+                <div class="complete-box space-y-3" v-if="isComplete">
+                    <h1 class="complete-box-text align-middle">Another one? Current Run: {{ fullWPM[0] }}</h1>
+                    <button class="restart-button" @click="reloadPage">Restart</button>
                 </div>
             </div>
         </div>
@@ -46,13 +46,12 @@ export default {
     data() {
         return {
             wordsJson: wordList,
-            wordsSel: 100,
+            wordsSel: 25,
             htmlTextBox: [],
             fullTextInput: '',
             isComplete: false,
             startTime: 0,
-            timeCompl: 0,
-            isCompleteOnce: false
+            timeCompl: 0
         }
     },
     methods: {
@@ -67,7 +66,6 @@ export default {
                     //console.log('Test completed');
                     this.timeCompl = Date.now();
                     this.isComplete = true;
-                    this.isCompleteOnce = true;
                     //console.log(this.textBox);
                 } else if (word.charAt(word.length - 1) == ' ') {
                     this.fullTextInput += word;
@@ -82,7 +80,11 @@ export default {
         set_wordCount(count) {
             this.wordCount = count;
             this.$cookies.set('word-count', count);
-            this.$forceUpdate();
+            if (this.isComplete) {
+                this.reloadPage();
+            } else {
+                this.$forceUpdate();
+            }
         }
     },
     computed: {
@@ -112,12 +114,28 @@ export default {
             return textBoxSplit.join(" ");
         },
         fullWPM() {
-            if (!this.isCompleteOnce) {
+            let cookieCorrChar = 0;
+            let cookieWrongChar = 0;
+            let cookieTimeTaken = 0;
+
+            if (this.$cookies.get("wpm-data") === undefined && !this.isComplete) {
                 return "WPM: TBC ACC: TBC";
+            } else if (this.$cookies.get("wpm-data") !== undefined) {
+                //Check if cookies exist from previous attempts
+                cookieCorrChar += Number(this.$cookies.get("wpm-data").correctChar);
+                cookieWrongChar += Number(this.$cookies.get("wpm-data").wrongChar);
+                cookieTimeTaken += Number(this.$cookies.get("wpm-data").totalTime);
+                if (!this.isComplete) {
+                    //if current session not complete, just history
+                    let wpm = Math.round((cookieCorrChar / 5) / cookieTimeTaken);
+                    let acc = Math.round(cookieCorrChar / (cookieCorrChar + cookieWrongChar) * 100);
+                    return ['', `WPM: ${wpm} ACC: ${acc}%`];
+                }
             }
 
             let correctChar = 0;
             let wrongChar = 0;
+            let timeTakenInMins = (this.timeCompl - this.startTime) / 1000 / 60;
             let textInputSplit = this.fullTextInput.split(" ");
             let textBoxSplit = this.textBox.split(" ");
             for (let i = 0; i < textInputSplit.length; i++) {
@@ -133,12 +151,31 @@ export default {
                     }
                 }
             }
-            //console.log(correctChar);
-            //console.log(wrongChar);
-            console.log(this.timeCompl - this.startTime);
-            let wpm = Math.round((correctChar / 5) / ((this.timeCompl - this.startTime) / 1000 / 60));
-            let acc = Math.round(correctChar / (correctChar + wrongChar) * 100);
-            return `WPM: ${wpm} ACC: ${acc}%`;
+
+            //Add both cookie and normal values to make total
+            let totalCorrChar = correctChar + cookieCorrChar;
+            let totalWrongChar = wrongChar + cookieWrongChar;
+            let totalTimeTaken = timeTakenInMins + cookieTimeTaken;
+
+            //json object as cookie value
+            let cookie_json = {
+                "correctChar": totalCorrChar,
+                "wrongChar": totalWrongChar,
+                "totalTime": totalTimeTaken 
+            }
+            //Cookie set to expire in a week
+            this.$cookies.set("wpm-data", cookie_json, {
+                maxAge: 60 * 60 * 24 * 7
+            });
+            //console.log("Should have set cookie data already");
+
+            let currWPM = Math.round((correctChar / 5) / timeTakenInMins);
+            let currACC = Math.round(correctChar / (correctChar + wrongChar) * 100);
+            
+
+            let wpm = Math.round((totalCorrChar / 5) / totalTimeTaken);
+            let acc = Math.round(totalCorrChar / (totalCorrChar + totalWrongChar) * 100);
+            return [`WPM: ${currWPM} ACC: ${currACC}%`, `WPM: ${wpm} ACC: ${acc}%`];
         },
         textBox() {
             let wordString = ''
@@ -167,55 +204,5 @@ export default {
 </script>
 
 <style scoped>
-.container {
-    @apply flex flex-col mx-auto p-5;
-}
-
-.main-card {
-    @apply block flex flex-col p-5 font-thin shadow-xl mx-auto;
-    background-color: #1f4287;
-}
-
-.word-box {
-    @apply w-full p-5 text-lg text-blue-800 shadow-lg;
-    background-color: #086972;
-    color: #a7ff83;
-}
-
-.text-input {
-    @apply h-16 text-2xl p-5 shadow-lg;
-    color: #071a52;
-    background-color: #17b978;
-}
-
-.word-sel {
-    @apply text-xl bg-blue-500 flex justify-between px-2 items-center;
-    color: #a7ff83;
-}
-
-.wordcount-button {
-    @apply pt-1 border-b border-transparent font-thin;
-}
-
-.wordcount-button:hover {
-    @apply border-b border-yellow-200;
-}
-
-.restart-button {
-    @apply w-1/4 h-16 text-2xl shadow-lg font-thin bg-blue-500;
-    color: #a7ff83;
-}
-
-.restart-button:hover {
-    @apply bg-blue-600 shadow-inner shadow-none;
-}
-
-.complete-box {
-    @apply w-full p-5 text-3xl shadow-lg items-center text-center bg-orange-200;
-}
-
-::placeholder {
-    color: white;
-    opacity: 0.8;
-}
+@import url("@/assets/css/typetest.css");
 </style>
