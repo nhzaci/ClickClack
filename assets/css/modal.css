@@ -31,8 +31,8 @@
 }
   
 .modal-body {
-    @apply p-5 my-5 shadow-lg;
-    background-color: #086972;
+    @apply p-5 my-5 shadow-lg text-indigo-900;
+    background-color: #17b978;
 }
 
 .modal-footer {
