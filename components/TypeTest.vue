@@ -119,7 +119,7 @@ export default {
             let cookieTimeTaken = 0;
 
             if (this.$cookies.get("wpm-data") === undefined && !this.isComplete) {
-                return "WPM: TBC ACC: TBC";
+                return ["", "WPM: TBC ACC: TBC"];
             } else if (this.$cookies.get("wpm-data") !== undefined) {
                 //Check if cookies exist from previous attempts
                 cookieCorrChar += Number(this.$cookies.get("wpm-data").correctChar);
@@ -129,7 +129,7 @@ export default {
                     //if current session not complete, just history
                     let wpm = Math.round((cookieCorrChar / 5) / cookieTimeTaken);
                     let acc = Math.round(cookieCorrChar / (cookieCorrChar + cookieWrongChar) * 100);
-                    return ['', `WPM: ${wpm} ACC: ${acc}%`];
+                    return ["", `WPM: ${wpm} ACC: ${acc}%`];
                 }
             }
 
