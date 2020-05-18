@@ -20,7 +20,7 @@
 }
 
 .word-sel {
-    @apply text-base bg-blue-500 flex justify-between px-2 items-center;
+    @apply flex flex-col text-base bg-blue-500 px-2 items-center;
     color: #a7ff83;
 }
 
@@ -65,7 +65,7 @@
         @apply text-xl;
     }
     .word-sel {
-        @apply text-xl;
+        @apply flex-row justify-between text-xl;
     }
     .word-box {
         @apply text-2xl;
@@ -78,5 +78,11 @@
     }
     .complete-box {
         @apply text-2xl;
+    }
+}
+
+@screen md {
+    .word-sel {
+        @apply flex-row justify-between
     }
 }
