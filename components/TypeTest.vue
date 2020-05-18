@@ -25,6 +25,7 @@
                         @input="checkSpace($event.target.value)" 
                         placeholder="Type here" 
                         v-if="!isComplete"
+                        autofocus
                     >
                     <button class="restart-button" v-if="!isComplete" @click="reloadPage()">Restart</button>
                     <input type="text" class="text-input w-full" placeholder="Type here" @keyup.esc="reloadPage()" v-if="isComplete" />
