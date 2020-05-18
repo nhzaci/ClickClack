@@ -28,7 +28,14 @@
                         autofocus
                     >
                     <button class="restart-button" v-if="!isComplete" @click="reloadPage()">Restart</button>
-                    <input type="text" class="text-input w-full" placeholder="Type here" @keyup.esc="reloadPage()" v-if="isComplete" />
+                    <input 
+                        type="text" 
+                        class="text-input w-full" 
+                        placeholder="Type here" 
+                        @keyup.esc="reloadPage()" 
+                        v-if="isComplete" 
+                        autofocus
+                    />
                 </div>
                 <div class="complete-box space-y-3" v-if="isComplete">
                     <h1 class="complete-box-text align-middle">Another one? Current Run: {{ fullWPM[0] }}</h1>
