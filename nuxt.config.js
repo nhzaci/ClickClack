@@ -9,7 +9,8 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: "A minimalist material design themed typing speed test website to help you asesess your typing speed" }
+      { hid: 'description', name: 'description', content: "A minimalist material design themed typing speed test website to help you asesess your typing speed" },
+      { name:'google-site-verification', content: 'khxiz-zHH9ePIk_FD_JMIS4v46WNF3lKlH3HcNf6w7E'}
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
