@@ -21,7 +21,7 @@
 
 .word-sel {
     @apply flex flex-col text-base bg-blue-500 px-2 items-center;
-    color: #a7ff83;
+    color: white;
 }
 
 .wordcount-button {

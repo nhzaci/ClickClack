@@ -41,7 +41,7 @@
   
 .modal-default-button {
     @apply p-2 bg-blue-600 shadow-lg;
-    color: #a7ff83;
+    color: white;
 }
 
 .modal-default-button:hover {

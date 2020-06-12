@@ -7,11 +7,11 @@
         </div>
         <ModalComponent @close="toggleModal()" v-if="showModal">
             <template v-slot:header>
-                <h1 class="font-bold text-xl text-yellow-400" style="color: #a7ff83;">Help</h1>
+                <h1 class="font-bold text-xl text-yellow-400" style="color: white;">Help</h1>
             </template>
             <template v-slot:body>
                 <div class="p-5">
-                    <ol class="list-disc space-y-2">
+                    <ol class="list-disc space-y-2" style="color:white">
                         <li>The internal timer starts once you start typing in the input box</li>
                         <li>Space skips onto the next word</li>
                         <li>Pressing 'Esc' inside the input box allows you to restart</li>
